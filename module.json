@@ -8,7 +8,7 @@
       "flags": {}
     }
   ],
-  "version": "1",
+  "version": "2",
   "compatibility": {
     "minimum": "12.238",
     "verified": "12.238"
@@ -50,9 +50,9 @@
         "id": "token-action-hud-core",
         "type": "module",
         "compatibility": {
-          "minimum": "1.5.7",
-          "verified": "1.5.7",
-          "maximum": "1.5.99"
+          "minimum": "2.0.0",
+          "verified": "2.0.8",
+          "maximum": "2.0.99"
         }
       }
     ]

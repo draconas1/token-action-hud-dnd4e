@@ -1,8 +1,6 @@
 // System Module Imports
-import {FEATURES, ITEM_TYPE, VALID_ACTOR_TYPES} from './constants.js'
+import {VALID_ACTOR_TYPES} from './constants.js'
 import { Utils } from './utils.js'
-// TODO CODE SMELL.  Remove with V2 removal.
-import { Helper } from "../../../../../systems/dnd4e/module/helper.js"
 
 export let ActionHandler = null
 
@@ -15,7 +13,6 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
         i18n = (str) => coreModule.api.Utils.i18n(str)
         version = this.dnd4e.tokenBarHooks.version
 
-        
         /**
          * Build system actions
          * Called by Token Action HUD Core
@@ -179,10 +176,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 
         async #buildPowers() {
             try {
-                if (this.version >= 3) {
-                    return this.#buildPowersV3()
-                }
-                else return this.#buildPowersV2()
+                return this.#buildPowersV3()
             }
             catch (e) {
                 this.#logError(e, null)
@@ -228,78 +222,12 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             groupInfo.forEach(gi => this.addActions(gi.actions, gi.groupData))
         }
 
-        async #buildPowersV2() {
-            const allPowers = this.actor.items.filter((item) => item.type === "power")
-            const actionType = "power"
-            if (allPowers.length === 0) return
-
-            let groupType = this.actor.system.powerGroupTypes
-            if (!groupType && this.actor) {
-                this.actor.system.powerGroupTypes = "usage"
-                groupType = "usage"
-            }
-
-            const groupings = game.dnd4e.tokenBarHooks.generatePowerGroups(this.actor)
-            let groupField = "useType"
-            switch (groupType) {
-                case "action" : groupField = "actionType"
-                    break;
-                case "type" : groupField = "powerType"
-                    break;
-                case "powerSubtype" : groupField = "powerSubtype"
-                    break;
-                default: break;
-            }
-            // original I had a neat solution doing filtering when building the subcategory, but this did not get things that did not fall into categories and instead got "other"
-            if (!groupings.other) {
-                groupings.other = { label: "DND4E.Other", items: [], dataset: {type: "other"} }
-            }
-            allPowers.forEach(power => {
-                const key = power.system[groupField]
-                if (groupings[key]) {
-                    groupings[key].items.push(power)
-                } else {
-                    groupings.other.items.push(power)
-                }
-            })
-            Object.entries(groupings).map(async (e) => {
-                const groupId = e[0]+"Power"
-                const groupData = {id: groupId, type: 'system'}
-                let powerList = e[1].items
-                if (this.hideUsed) {
-                    powerList = powerList.filter((power) => {
-                        return power.system.useType === "recharge" || this.dnd4e.tokenBarHooks.isPowerAvailable(this.actor, power)
-                    })
-                }
-                else {
-                    // need to poke this to force the available boolean correctly for recharge powers
-                    powerList.forEach((power) => {
-                        this.dnd4e.tokenBarHooks.isPowerAvailable(this.actor, power)
-                    })
-                }
-
-                const actions = await Promise.all(powerList
-                    .map(async (power) => {
-                        const action = await this.#buildActionFromItem(actionType, power)
-                        if (this.powerColours) {
-                            action.cssClass = `force-ability-usage--${power.system.useType}`
-                        }
-                        return action
-                    }))
-                this.addActions(actions, groupData)
-            });
-        }
-
         /**
          * Build inventory
          * @private
          */
         async #buildInventory () {
-            // TODO: API V2 Removal
-            let inventoryTypes = ITEM_TYPE;
-            if (this.version >= 3) {
-                inventoryTypes = this.dnd4e.config.inventoryTypes
-            }
+            const inventoryTypes = this.dnd4e.config.inventoryTypes;
             const filter = ((itemData) => itemData.system.equipped || this.displayUnequipped)
             return this.#buildBasicGroupsOfActionsByType(inventoryTypes, 'item', filter)
         }
@@ -309,12 +237,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          * @private
          */
         async #buildFeatures() {
-            // TODO: API V2 Removal
-            let featureTypes = FEATURES;
-            if (this.version >= 3) {
-                featureTypes = this.dnd4e.config.featureTypes
-            }
-
+            const featureTypes = this.dnd4e.config.featureTypes;
             return this.#buildBasicGroupsOfActionsByType(featureTypes, 'item', undefined)
         }
 
@@ -494,18 +417,6 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
         }
 
         async #getTooltip (tooltipData) {
-            if (this.version >= 3) {
-                return this.#getTooltipV3(tooltipData)
-            }
-            else return this.#getTooltipV2(tooltipData)
-        }
-
-        /**
-         * Get tooltip
-         * @param {object} tooltipData The tooltip data
-         * @returns {Promise}           The tooltip
-         */
-        async #getTooltipV3 (tooltipData) {
             if (!tooltipData) return ''
             if (this.tooltipsSetting === 'none') return ''
             if (typeof tooltipData === 'string') return tooltipData
@@ -548,81 +459,6 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 coreModule.api.Logger.error(JSON.stringify(context))
             }
         }
-
-        /**
-         * Get tooltip
-         * @param {object} tooltipData The tooltip data
-         * @returns {Promise}           The tooltip
-         */
-        async #getTooltipV2 (tooltipData) {
-            if (this.tooltipsSetting === 'none') return ''
-            if (typeof tooltipData === 'string') return tooltipData
-
-            const name = coreModule.api.Utils.i18n(tooltipData.name)
-
-            if (this.tooltipsSetting === 'nameOnly') return name
-
-
-            if (!this.actor) return ''
-            if (!tooltipData.type) return ''
-
-            const cardData = await ( async () => {
-                if ((tooltipData.type === "power" || tooltipData.type === "consumable") && tooltipData.system.autoGenChatPowerCard) {
-                    let weaponUse = Helper.getWeaponUse(tooltipData.system, this.actor);
-                    let attackBonus = null;
-                    if(this.hasAttack){
-                        attackBonus = await tooltipData.getAttackBonus();
-                    }
-                    let cardString = Helper._preparePowerCardData(await tooltipData.getChatData(), CONFIG, this.actor, attackBonus);
-                    return Helper.commonReplace(cardString, this.actor, tooltipData, weaponUse? weaponUse.system : null, 1);
-                } else {
-                    return null;
-                }
-            })();
-
-            // Basic template rendering data
-            const token = this.actor.token;
-            const templateData = {
-                actor: this.actor,
-                tokenId: token ? token.uuid : null,
-                effects: null,
-                item: tooltipData,
-                system: await tooltipData.getChatData(),
-                labels: tooltipData.labels,
-                hasAttack: tooltipData.hasAttack,
-                isHealing: tooltipData.isHealing,
-                isPower: tooltipData.type === "power",
-                hasDamage: tooltipData.hasDamage,
-                hasHealing: tooltipData.hasHealing,
-                hasEffect: tooltipData.hasEffect,
-                cardData,
-                isVersatile: tooltipData.isVersatile,
-                hasSave: tooltipData.hasSave,
-                hasAreaTarget: tooltipData.hasAreaTarget,
-                isRoll: false,
-            };
-
-            // Render the chat card template
-            let templateType = "item"
-            if (["tool", "ritual"].includes(tooltipData.type)) {
-                templateType =  tooltipData.type
-                //templateData.abilityCheck = Helper.byString(tooltipData.system.attribute.replace(".mod",".label").replace(".total",".label"), this.actor.system);
-            }
-            const template = `systems/dnd4e/templates/chat/${templateType}-card.html`;
-            let html = await renderTemplate(template, templateData);
-
-            if(["power", "consumable"].includes(templateData.item.type)) {
-                html = html.replace("ability-usage--", `ability-usage--${templateData.system.useType}`);
-            }
-            else if (["weapon", "equipment", "backpack", "tool", "loot"].includes(templateData.item.type)) {
-                html = html.replace("ability-usage--", `ability-usage--item`);
-            } else {
-                html = html.replace("ability-usage--", `ability-usage--other`);
-            }
-
-            return `<div class="chat-message">${html}</div>`
-        }
-
 
         /**
          * Build the utility buttons

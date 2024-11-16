@@ -89,7 +89,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     await this.#toggleEffect(event, actor, actionId)
                     break
                 case 'utility':
-                    this.#handleUtilityAction(actor, token, actionId)
+                    this.#handleUtilityAction(event, actor, token, actionId)
                     break
 
             }
@@ -130,7 +130,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          * @param {string} actionId The action id
          * @param {object} actor    The actor
          */
-        async #handleUtilityAction (actor, token, actionId) {
+        async #handleUtilityAction (event, actor, token, actionId) {
             switch (actionId) {
                 case "toggleVisibility":
                     token.toggleVisibility();
