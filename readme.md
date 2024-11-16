@@ -5,9 +5,19 @@ Integration for the [DnD 4E](https://foundryvtt.com/packages/dnd4e) System to us
 
 # Installation
 
+## If you are using Token Action Hud Core 2.0 or Later
+
 1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
 2. Click **Install Module**
 3. In the Manifest URL field, paste: `https://github.com/draconas1/token-action-hud-dnd4e/releases/latest/download/module.json`
+4. Click **Install** next to the pasted Manifest URL
+
+
+## If you are using Token Action Hud Core 1.5
+
+1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
+2. Click **Install Module**
+3. In the Manifest URL field, paste: `https://github.com/draconas1/token-action-hud-dnd4e/releases/download/1.0/module.json`
 4. Click **Install** next to the pasted Manifest URL
 
 # Required Modules
