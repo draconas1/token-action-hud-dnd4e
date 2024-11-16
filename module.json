@@ -11,7 +11,7 @@
   "version": "2",
   "compatibility": {
     "minimum": "12.238",
-    "verified": "12.238"
+    "verified": "12.331"
   },
   "url": "https://github.com/draconas1/token-action-hud-dnd4e",
   "manifest": "https://github.com/draconas1/token-action-hud-dnd4e/releases/latest/download/module.json",
