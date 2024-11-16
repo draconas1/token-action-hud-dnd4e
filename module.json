@@ -1,0 +1,61 @@
+{
+  "title": "Token Action HUD for D&D 4E",
+  "description": "4E Integration for Token Action HUD Core",
+  "authors": [
+    {
+      "name": "Drac",
+      "discord": "Draconas#1417",
+      "flags": {}
+    }
+  ],
+  "version": "1",
+  "compatibility": {
+    "minimum": "12.238",
+    "verified": "12.238"
+  },
+  "url": "https://github.com/draconas1/token-action-hud-dnd4e",
+  "manifest": "https://github.com/draconas1/token-action-hud-dnd4e/releases/latest/download/module.json",
+  "download": "https://github.com/draconas1/token-action-hud-dnd4e/releases/latest/download/module.zip",
+  "license": "https://raw.githubusercontent.com/draconas1/token-action-hud-dnd4e/main/LICENSE",
+  "readme": "https://github.com/draconas1/token-action-hud-dnd4e/blob/main/README.md",
+  "bugs": "https://github.com/draconas1/token-action-hud-dnd4e/issues",
+  "esmodules": [
+    "module/init.js"
+  ],
+  "styles": [
+    "styles/tah-dnd4e-style.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json",
+      "flags": {}
+    }
+  ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd4e",
+        "type": "system",
+        "manifest": "https://raw.githubusercontent.com/EndlesNights/dnd4eBeta/main/system.json",
+        "compatibility": {
+          "minimum": "0.5.1",
+          "verified": "0.5.7"
+        }
+      }
+    ],
+    "requires": [
+      {
+        "id": "token-action-hud-core",
+        "type": "module",
+        "compatibility": {
+          "minimum": "1.5.7",
+          "verified": "1.5.7",
+          "maximum": "1.5.99"
+        }
+      }
+    ]
+  },
+  "id": "token-action-hud-dnd4e"
+}
