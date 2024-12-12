@@ -151,6 +151,6 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
         groups: groupsArray
     }
 
-    coreModule.api.Logger.debug(`Defaults set to:`)
-    coreModule.api.Logger.debug(JSON.stringify(DEFAULTS))
+    // coreModule.api.Logger.debug(`Defaults set to:`)
+    // coreModule.api.Logger.debug(JSON.stringify(DEFAULTS))
 })
