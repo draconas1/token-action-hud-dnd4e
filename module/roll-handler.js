@@ -111,9 +111,18 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             const item = actor.items.get(actionId)
 
             if (this.#needsRecharge(actor, item)) {
-                event.currentTarget = { closest : (_) => {return {dataset : { itemId : actionId}}} };
-                this.dnd4e.tokenBarHooks.rechargePower(actor, item, event)
-                return;
+                // this is ugly, but is how recharge works, posssibly move this into the api, as its horrible internal code
+                if (event.currentTarget) {
+                    event.currentTarget.closest = (_) => {return {dataset : { itemId : actionId}}}
+                    return this.dnd4e.tokenBarHooks.rechargePower(actor, item, event)
+                }
+                else {
+                    const newEvent = {
+                        ...event,
+                        currentTarget: { closest : (_) => {return {dataset : { itemId : actionId}}} }
+                    }
+                    return this.dnd4e.tokenBarHooks.rechargePower(actor, item, newEvent)
+                }
             }
 
             return this.dnd4e.tokenBarHooks.rollPower(actor, item, event)
