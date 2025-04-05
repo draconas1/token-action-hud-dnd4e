@@ -19,7 +19,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             const renderable = ['item', 'power']
 
             if (renderable.includes(actionTypeId) && this.isRenderItem()) {
-                return this.doRenderItem(this.actor, actionId)
+                return this.renderItem(this.actor, actionId)
             }
 
             const knownCharacters = ['Player Character', 'NPC']
