@@ -6,9 +6,13 @@
       "name": "Drac",
       "discord": "Draconas#1417",
       "flags": {}
+    },
+    {
+      "name": "Foxlee",
+      "flags": {}
     }
   ],
-  "version": "2",
+  "version": "3",
   "compatibility": {
     "minimum": "12.238",
     "verified": "12.331"
@@ -40,8 +44,8 @@
         "type": "system",
         "manifest": "https://raw.githubusercontent.com/EndlesNights/dnd4eBeta/main/system.json",
         "compatibility": {
-          "minimum": "0.5.1",
-          "verified": "0.5.7"
+          "minimum": "0.6.0",
+          "verified": "0.6.7"
         }
       }
     ],
@@ -52,7 +56,7 @@
         "compatibility": {
           "minimum": "2.0.0",
           "verified": "2.0.8",
-          "maximum": "2.0.99"
+          "maximum": "2.0.11"
         }
       }
     ]

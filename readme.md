@@ -5,13 +5,29 @@ Integration for the [DnD 4E](https://foundryvtt.com/packages/dnd4e) System to us
 
 # Installation
 
-## If you are using Token Action Hud Core 2.0 or Later
+Versions depend on what version of **Token Action Hud** and what version of **D&D 4E system** you are running.  They are not cross compatible!
+
+There are different versions of Token Action Hud 1.5 and 2.0.  
+All future development is for TAH 2.0 and 1.5 is considered legacy and no longer actively supported or developed.
+
+There is a different version for D&D 4E System 0.5.x and for 0.6.x
+All future development is for D&D 4E 0.6+ and the 0.5 system branch is considered legacy and no longer actively supported or developed.
+
+At time of writing D&D 4E does not support V13, so the highest version of Token Action Hud it works with is 2.0.11
+
+## If you are using D&D 4E 0.6+ or Later (You must be using TAH 2.0 or later)
 
 1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
 2. Click **Install Module**
 3. In the Manifest URL field, paste: `https://github.com/draconas1/token-action-hud-dnd4e/releases/latest/download/module.json`
 4. Click **Install** next to the pasted Manifest URL
 
+## If you are using Token Action Hud Core 2.0+ & D&D 4E system 0.5.9 or lower
+
+1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
+2. Click **Install Module**
+3. In the Manifest URL field, paste: `https://github.com/draconas1/token-action-hud-dnd4e/releases/latest/2.0.4/module.json`
+4. Click **Install** next to the pasted Manifest URL
 
 ## If you are using Token Action Hud Core 1.5
 
