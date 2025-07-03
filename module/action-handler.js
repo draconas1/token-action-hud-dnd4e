@@ -237,8 +237,48 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          * @private
          */
         async #buildFeatures() {
-            const featureTypes = this.dnd4e.config.featureTypes;
-            return this.#buildBasicGroupsOfActionsByType(featureTypes, 'item', undefined)
+            //const featureTypes = this.dnd4e.config.featureTypes;
+            //return this.#buildBasicGroupsOfActionsByType(featureTypes, 'item', undefined)
+            try {
+                return this.#buildFeaturesV2()
+            }
+            catch (e) {
+                this.#logError(e, null)
+            }
+        }
+
+        async #buildFeaturesV2() {
+            const actionType = "feature"
+            const groupings = this.dnd4e.config.featureTypes;
+			
+			for (const [k,v] of Object.entries(groupings)){
+				v.items = [];
+			}
+			
+			for (const itemData of this.actor.items) {
+				if(itemData.type == "feature"){
+					groupings[itemData.system.featureType].items.push(itemData)
+				}
+			}
+			
+            const groupDataFutures = Object.entries(groupings).map(async (e) => {
+                const groupId = e[0]+"Feature"
+                const groupData = {id: groupId, type: 'system'}
+                let featureList = e[1].items
+				
+                const actionFutures = featureList.map(async (feature) => {
+                    const action = await this.#buildActionFromItem(actionType, feature)
+                    return action
+                })
+
+                const actions = await Promise.all(actionFutures)
+                return {
+                    groupData,
+                    actions
+                }
+            });
+            const groupInfo = await Promise.all(groupDataFutures)
+            groupInfo.forEach(gi => this.addActions(gi.actions, gi.groupData))
         }
 
         /**
@@ -252,7 +292,6 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             try {
                 const mapByItemType = new Map()
                 const filter = optFilter ?? ((itemData) => true)
-
 
                 for (const itemData of this.actor.items) {
                     const type = itemData.type

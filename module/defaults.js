@@ -32,10 +32,10 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             }
         })
         layout.sort(function(a, b) {
-            if (a.id === "otherPower") {
+            if (a.id === "otherPower" || a.id === "otherFeature") {
                 return 1
             }
-            if (b.id === "otherPower") {
+            if (b.id === "otherPower" || b.id === "otherFeature") {
                 return -1
             }
             return 0
@@ -44,8 +44,8 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
     }
 
     // convert the dnd 4e config to a TAH group
-    const featureGroups = dndToGroup(game.dnd4e.config.featureTypes, "")
     const inventoryGroups = dndToGroup(game.dnd4e.config.inventoryTypes, "")
+    const featureGroups = dndToGroup(game.dnd4e.config.featureTypes, "Feature")
 
     // Power groups are nested
     /*
@@ -62,15 +62,14 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             powerGroupsFlattened[key] = value
         }
     })
-
-    // add triggered actions for Fox's sheet
+    /* Should be unnecessary since Action (Modern) is now a system selection - Fox
+	// add triggered actions for Fox's sheet
     powerGroupsFlattened.triggered = {
         name: "triggered-actions",
         label: "Fox4e.GroupTriggered"
     }
-
+	*/
     const powerGroups = dndToGroup(powerGroupsFlattened, "Power")
-
 
     const groups = {
         ...STATIC_GROUPS,
@@ -115,7 +114,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             {
                 nestId: 'features',
                 id: 'features',
-                name: coreModule.api.Utils.i18n('DND4E.Features'),
+                name: coreModule.api.Utils.i18n('DND4E.Feature.Features'),
                 groups: groupToLayout('features', featureGroups)
             },
             {
