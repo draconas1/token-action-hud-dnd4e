@@ -81,6 +81,9 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 case 'item':
                     this.#handleItemAction(event, actor, actionId)
                     break
+                case 'feature':
+                    this.#handleItemAction(event, actor, actionId)
+                    break
                 case 'condition':
                     if (!token) return
                     await this.#toggleCondition(event, actor, token, actionId)
