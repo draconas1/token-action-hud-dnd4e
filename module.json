@@ -12,10 +12,10 @@
       "flags": {}
     }
   ],
-  "version": "3",
+  "version": "4.0.0",
   "compatibility": {
-    "minimum": "12.238",
-    "verified": "12.331"
+    "minimum": "13.341",
+    "verified": "13.351"
   },
   "url": "https://github.com/draconas1/token-action-hud-dnd4e",
   "manifest": "https://github.com/draconas1/token-action-hud-dnd4e/releases/latest/download/module.json",
@@ -25,9 +25,6 @@
   "bugs": "https://github.com/draconas1/token-action-hud-dnd4e/issues",
   "esmodules": [
     "module/init.js"
-  ],
-  "styles": [
-    "styles/tah-dnd4e-style.css"
   ],
   "languages": [
     {
@@ -44,8 +41,8 @@
         "type": "system",
         "manifest": "https://raw.githubusercontent.com/EndlesNights/dnd4eBeta/main/system.json",
         "compatibility": {
-          "minimum": "0.6.0",
-          "verified": "0.6.7"
+          "minimum": "0.7.3",
+          "verified": "0.7.3-beta"
         }
       }
     ],
@@ -54,9 +51,8 @@
         "id": "token-action-hud-core",
         "type": "module",
         "compatibility": {
-          "minimum": "2.0.0",
-          "verified": "2.0.8",
-          "maximum": "2.0.11"
+          "minimum": "2.0.12",
+          "verified": "2.0.16"
         }
       }
     ]
