@@ -42,7 +42,7 @@
         "manifest": "https://raw.githubusercontent.com/EndlesNights/dnd4eBeta/main/system.json",
         "compatibility": {
           "minimum": "0.7.3",
-          "verified": "0.7.3-beta"
+          "verified": "0.7.4"
         }
       }
     ],
