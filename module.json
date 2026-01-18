@@ -26,6 +26,9 @@
   "esmodules": [
     "module/init.js"
   ],
+  "styles": [
+    "styles/tah-dnd4e-style.css"
+  ],
   "languages": [
     {
       "lang": "en",

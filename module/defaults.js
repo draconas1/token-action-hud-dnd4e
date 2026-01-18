@@ -38,6 +38,12 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             if (b.id === "otherPower" || b.id === "otherFeature") {
                 return -1
             }
+            if (a.id === "itemPower") {
+                return 1
+            }
+            if (b.id === "itemPower") {
+                return -1
+            }
             return 0
         })
         return layout

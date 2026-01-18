@@ -1,0 +1,33 @@
+:root {
+    --background-atwill:-o-linear-gradient(45deg, #125f15, #55aa2e);
+    --background-atwill:linear-gradient(45deg, #125f15, #55aa2e);
+    --background-encounter:o-linear-gradient(45deg, #3c0000, #dc0000);
+    --background-encounter:linear-gradient(45deg, #3c0000, #dc0000);
+    --background-daily:-o-linear-gradient(45deg, #1b1b1d, #ababab);
+    --background-daily:linear-gradient(45deg, #1b1b1d, #ababab);
+    --background-recharge:-o-linear-gradient(45deg, #01003c, #71a2ec);
+    --background-recharge:linear-gradient(45deg, #01003c, #71a2ec);
+    --background-other:-o-linear-gradient(45deg, #25003c, #dc9ff1a6);
+    --background-other:linear-gradient(45deg, #25003c, #dc9ff1a6);
+    --background-item:-o-linear-gradient(45deg, #6a581c, #d4af37);
+    --background-item:linear-gradient(45deg, #6a581c, #d4af37);
+
+    .force-ability-usage--atwill{
+        background:var(--background-atwill) !important;
+    }
+    .force-ability-usage--encounter{
+        background:var(--background-encounter) !important;
+    }
+    .force-ability-usage--daily{
+        background:var(--background-daily) !important;
+    }
+    .force-ability-usage--recharge{
+        background:var(--background-recharge) !important;
+    }
+    .force-ability-usage--other{
+        background:var(--background-other)!important;
+    }
+    .force-ability-usage--item{
+        background:var(--background-item) !important;
+    }
+}
