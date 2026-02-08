@@ -469,7 +469,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 
             if (typeof tooltipData.getChatData == 'function') {
                 try {
-                    const html = await this.dnd4e.tokenBarHooks.generateItemTooltip(this.actor, tooltipData)
+                    const html = await foundry.applications.ux.TextEditor.implementation.enrichHTML(tooltipData.system.description.value);
                     const finalhtml = this.#buildHorribleNestedDiv(html, ["tah-4etooltip"])
                     return finalhtml
                 }
