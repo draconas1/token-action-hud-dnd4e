@@ -30,4 +30,7 @@
     .force-ability-usage--item{
         background:var(--background-item) !important;
     }
+    .tah-4etooltip{
+        text-align: left;
+    }
 }
