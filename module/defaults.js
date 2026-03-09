@@ -32,10 +32,10 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             }
         })
         layout.sort(function(a, b) {
-            if (a.id === "otherPower" || a.id === "otherFeature") {
+            if (a.id === "otherPower" || a.id === "otherFeature" || a.id === "otherRitual") {
                 return 1
             }
-            if (b.id === "otherPower" || b.id === "otherFeature") {
+            if (b.id === "otherPower" || b.id === "otherFeature" || a.id === "otherRitual") {
                 return -1
             }
             if (a.id === "itemPower") {
@@ -52,6 +52,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
     // convert the dnd 4e config to a TAH group
     const inventoryGroups = dndToGroup(game.dnd4e.config.inventoryTypes, "")
     const featureGroups = dndToGroup(game.dnd4e.config.featureTypes, "Feature")
+    const ritualGroups = dndToGroup(game.dnd4e.config.ritualTypes, "Ritual")
 
     // Power groups are nested
     /*
@@ -82,6 +83,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
         ...featureGroups,
         ...inventoryGroups,
         ...powerGroups,
+        ...ritualGroups,
     }
 
     Object.values(groups).forEach(group => {
@@ -130,6 +132,12 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 groups: groupToLayout('inventory', inventoryGroups)
             },
             {
+                nestId: 'rituals',
+                id: 'rituals',
+                name: coreModule.api.Utils.i18n('DND4E.Rituals'),
+                groups: groupToLayout('rituals', ritualGroups)
+            },
+            {
                 nestId: 'effects',
                 id: 'effects',
                 name: coreModule.api.Utils.i18n('tokenActionHud.dnd4e.conditions'),
@@ -156,6 +164,6 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
         groups: groupsArray
     }
 
-    // coreModule.api.Logger.debug(`Defaults set to:`)
-    // coreModule.api.Logger.debug(JSON.stringify(DEFAULTS))
+   // coreModule.api.Logger.info(`Defaults set to:`)
+   // coreModule.api.Logger.info(JSON.stringify(DEFAULTS))
 })

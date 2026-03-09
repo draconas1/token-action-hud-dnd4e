@@ -71,6 +71,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 this.#buildPowers(),
                 this.#buildInventory(),
                 this.#buildFeatures(),
+                this.#buildRituals(),
                 this.#buildConditions(),
                 this.#buildEffects(),
             ])
@@ -263,6 +264,40 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 			
             const groupDataFutures = Object.entries(groupings).map(async (e) => {
                 const groupId = e[0]+"Feature"
+                const groupData = {id: groupId, type: 'system'}
+                let featureList = e[1].items
+				
+                const actionFutures = featureList.map(async (feature) => {
+                    const action = await this.#buildActionFromItem(actionType, feature)
+                    return action
+                })
+
+                const actions = await Promise.all(actionFutures)
+                return {
+                    groupData,
+                    actions
+                }
+            });
+            const groupInfo = await Promise.all(groupDataFutures)
+            groupInfo.forEach(gi => this.addActions(gi.actions, gi.groupData))
+        }
+
+        async #buildRituals() {
+            const actionType = "feature"
+            const groupings = this.dnd4e.config.ritualTypes;
+			
+			for (const [k,v] of Object.entries(groupings)){
+				v.items = [];
+			}
+			
+			for (const itemData of this.actor.items) {
+				if(itemData.type == "ritual"){
+					groupings[itemData.system.category].items.push(itemData)
+				}
+			}
+			
+            const groupDataFutures = Object.entries(groupings).map(async (e) => {
+                const groupId = e[0]+"Ritual"
                 const groupData = {id: groupId, type: 'system'}
                 let featureList = e[1].items
 				
