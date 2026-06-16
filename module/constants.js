@@ -15,7 +15,7 @@ export const CORE_MODULE = {
 /**
  * Core module version required by the system module
  */
-export const REQUIRED_CORE_MODULE_VERSION = '2.0'
+export const REQUIRED_CORE_MODULE_VERSION = '2'
 
 export const VALID_ACTOR_TYPES = ["Player Character", "NPC"]
 
