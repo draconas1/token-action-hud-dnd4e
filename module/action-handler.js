@@ -9,9 +9,10 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
      * Extends Token Action HUD Core's ActionHandler class and builds system-defined actions for the HUD
      */
     ActionHandler = class ActionHandler extends coreModule.api.ActionHandler {
-        dnd4e = game.dnd4e
+        dnd4eConfig = CONFIG.DND4E
+        dnd4eTAHApi = game.dnd4e.tokenBarHooks ?? dnd4e.compatibility.tah.TokenBarHooks
         i18n = (str) => coreModule.api.Utils.i18n(str)
-        version = this.dnd4e.tokenBarHooks.version
+        version = this.dnd4eTAHApi.version
 
         /**
          * Build system actions
@@ -97,7 +98,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          */
         #buildAbilities() {
             // Get abilities
-            const abilities = (!this.actor) ?this.dnd4e.config.abilities : this.actor.system.abilities
+            const abilities = (!this.actor) ?this.dnd4eConfig.abilities : this.actor.system.abilities
 
             // Exit if no abilities exist
             if (abilities.length === 0) return
@@ -107,7 +108,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 .filter((ability) => abilities[ability[0]].value !== 0)
                 .map(([abilityId, ability]) => {
                     const id = abilityId
-                    const name = this.abbreviateSkills ? abilityId : this.dnd4e.config.abilities[abilityId]
+                    const name = this.abbreviateSkills ? abilityId : this.dnd4eConfig.abilities[abilityId]
                     const encodedValue = ["ability", abilityId].join(this.delimiter)
                     const mod = ability?.mod ?? ''
                     const info1 = (this.actor) ? { text: coreModule.api.Utils.getModifier(mod) } : null
@@ -133,7 +134,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          */
         #buildSkills() {
             // Get abilities
-            const skills = (!this.actor) ? this.dnd4e.config.skills : this.actor.system.skills
+            const skills = (!this.actor) ? this.dnd4eConfig.skills : this.actor.system.skills
 
             // Exit if no abilities exist
             if (skills.length === 0) return
@@ -142,10 +143,10 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
             const actions = Object.entries(skills)
                 .map(([skillId, skill]) => {
                     const id = skillId
-                    const name = this.abbreviateSkills ? skillId : this.dnd4e.config.skills[skillId].label
+                    const name = this.abbreviateSkills ? skillId : this.dnd4eConfig.skills[skillId].label
                     const encodedValue = ["skill", skillId].join(this.delimiter)
                     const mod = skill.total ?? ''
-                    const tooltip = this.i18n(this.dnd4e.config.trainingLevels[skill.training])
+                    const tooltip = this.i18n(this.dnd4eConfig.trainingLevels[skill.training])
                     const icon1 = this.#getTrainingIcon(skill.training, skill.tooltip) ?? ''
                     const info1 = (this.actor) ? { text: coreModule.api.Utils.getModifier(mod) } : null
                     return {
@@ -187,7 +188,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 
         async #buildPowersV3() {
             const actionType = "power"
-            const groupings = this.dnd4e.tokenBarHooks.powersBySheetGroup(this.actor)
+            const groupings = this.dnd4eTAHApi.powersBySheetGroup(this.actor)
 
             const groupDataFutures = Object.entries(groupings).map(async (e) => {
                 const groupId = e[0]+"Power"
@@ -195,13 +196,13 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 let powerList = e[1].items
                 if (this.hideUsed) {
                     powerList = powerList.filter((power) => {
-                        return power.system.useType === "recharge" || this.dnd4e.tokenBarHooks.isPowerAvailable(this.actor, power)
+                        return power.system.useType === "recharge" || this.dnd4eTAHApi.isPowerAvailable(this.actor, power)
                     })
                 }
                 else {
                     // need to poke this to force the available boolean correctly for recharge powers
                     powerList.forEach((power) => {
-                        this.dnd4e.tokenBarHooks.isPowerAvailable(this.actor, power)
+                        this.dnd4eTAHApi.isPowerAvailable(this.actor, power)
                     })
                 }
 
@@ -228,7 +229,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          * @private
          */
         async #buildInventory () {
-            const inventoryTypes = this.dnd4e.config.inventoryTypes;
+            const inventoryTypes = this.dnd4eConfig.inventoryTypes;
             const filter = ((itemData) => itemData.system.equipped || this.displayUnequipped)
             return this.#buildBasicGroupsOfActionsByType(inventoryTypes, 'item', filter)
         }
@@ -238,7 +239,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          * @private
          */
         async #buildFeatures() {
-            //const featureTypes = this.dnd4e.config.featureTypes;
+            //const featureTypes = this.dnd4eConfig.featureTypes;
             //return this.#buildBasicGroupsOfActionsByType(featureTypes, 'item', undefined)
             try {
                 return this.#buildFeaturesV2()
@@ -250,7 +251,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 
         async #buildFeaturesV2() {
             const actionType = "feature"
-            const groupings = this.dnd4e.config.featureTypes;
+            const groupings = this.dnd4eConfig.featureTypes;
 			
 			for (const [k,v] of Object.entries(groupings)){
 				v.items = [];
@@ -284,7 +285,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 
         async #buildRituals() {
             const actionType = "feature"
-            const groupings = this.dnd4e.config.ritualTypes;
+            const groupings = this.dnd4eConfig.ritualTypes;
 			
 			for (const [k,v] of Object.entries(groupings)){
 				v.items = [];
@@ -504,7 +505,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 
             if (typeof tooltipData.getChatData == 'function') {
                 try {
-                    const html = await this.dnd4e.tokenBarHooks.generateItemTooltip(this.actor, tooltipData)
+                    const html = await this.dnd4eTAHApi.generateItemTooltip(this.actor, tooltipData)
                     const finalhtml = this.#buildHorribleNestedDiv(html, ["tah-4etooltip"])
                     return finalhtml
                 }

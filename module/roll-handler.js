@@ -5,7 +5,8 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
      * Extends Token Action HUD Core's RollHandler class and handles action events triggered when an action is clicked
      */
     RollHandler = class RollHandler extends coreModule.api.RollHandler {
-        dnd4e = game.dnd4e
+        dnd4eTAHApi = game.dnd4e.tokenBarHooks ?? dnd4e.compatibility.tah.TokenBarHooks
+
         /**
          * Handle action click
          * Called by Token Action HUD Core when an action is left or right-clicked
@@ -70,10 +71,10 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
         async #handleAction (event, actor, token, actionTypeId, actionId) {
             switch (actionTypeId) {
                 case "ability":
-                    this.dnd4e.tokenBarHooks.rollAbility(actor, actionId, event);
+                    this.dnd4eTAHApi.rollAbility(actor, actionId, event);
                     break;
                 case "skill":
-                    this.dnd4e.tokenBarHooks.rollSkill(actor, actionId, event);
+                    this.dnd4eTAHApi.rollSkill(actor, actionId, event);
                     break
                 case 'power':
                     this.#handlePowerAction(event, actor, actionId);
@@ -107,7 +108,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          */
         #handleItemAction (event, actor, actionId) {
             const item = actor.items.get(actionId)
-            this.dnd4e.tokenBarHooks.rollItem(actor, item, event);
+            this.dnd4eTAHApi.rollItem(actor, item, event);
         }
 
         #handlePowerAction(event, actor, actionId) {
@@ -117,22 +118,22 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                 // this is ugly, but is how recharge works, posssibly move this into the api, as its horrible internal code
                 if (event.currentTarget) {
                     event.currentTarget.closest = (_) => {return {dataset : { itemId : actionId}}}
-                    return this.dnd4e.tokenBarHooks.rechargePower(actor, item, event)
+                    return this.dnd4eTAHApi.rechargePower(actor, item, event)
                 }
                 else {
                     const newEvent = {
                         ...event,
                         currentTarget: { closest : (_) => {return {dataset : { itemId : actionId}}} }
                     }
-                    return this.dnd4e.tokenBarHooks.rechargePower(actor, item, newEvent)
+                    return this.dnd4eTAHApi.rechargePower(actor, item, newEvent)
                 }
             }
 
-            return this.dnd4e.tokenBarHooks.rollPower(actor, item, event)
+            return this.dnd4eTAHApi.rollPower(actor, item, event)
         }
 
         #needsRecharge(actor, item) {
-            return item.system.useType === "recharge" && !this.dnd4e.tokenBarHooks.isPowerAvailable(actor, item)
+            return item.system.useType === "recharge" && !this.dnd4eTAHApi.isPowerAvailable(actor, item)
         }
 
         /**
@@ -148,26 +149,26 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                     token.toggleVisibility();
                     break;
                 case "saveDialog":
-                    this.dnd4e.tokenBarHooks.saveDialog(actor, event)
+                    this.dnd4eTAHApi.saveDialog(actor, event)
                     break;
                 case "save":
-                    this.dnd4e.tokenBarHooks.quickSave(actor, event)
+                    this.dnd4eTAHApi.quickSave(actor, event)
                     break;
                 case "healDialog":
-                    this.dnd4e.tokenBarHooks.healDialog(actor, event)
+                    this.dnd4eTAHApi.healDialog(actor, event)
                     break;
                 case "initiative":
                     await actor.rollInitiative({ createCombatants: true, event });
                     Hooks.callAll("forceUpdateTokenActionHUD");
                     break;
                 case "actionPoint":
-                    this.dnd4e.tokenBarHooks.actionPoint(actor, event)
+                    this.dnd4eTAHApi.actionPoint(actor, event)
                     break;
                 case "secondWind":
-                    this.dnd4e.tokenBarHooks.secondWind(actor, event)
+                    this.dnd4eTAHApi.secondWind(actor, event)
                     break;
                 case "deathSave":
-                    this.dnd4e.tokenBarHooks.deathSave(actor, event)
+                    this.dnd4eTAHApi.deathSave(actor, event)
                     break;
                 case 'endTurn':
                     if (game.combat?.current?.tokenId === token.id) {
