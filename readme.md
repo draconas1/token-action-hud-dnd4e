@@ -10,13 +10,13 @@ Versions depend on what version of **Token Action Hud** and what version of **D&
 There are different versions of Token Action Hud 1.5 and 2.0.x  2.0.12 is the lowest version that supports Foundry V12
 All future development is for TAH 2.0.   1.5 is considered legacy and no longer actively supported or developed.
 
-There is a different version for D&D 4E System 0.5.x, 0.6.x (Foundry V12) and 0.7.x (Foundry v13)
-All future development is for D&D 4E 0.7+ and other branches are considered legacy and no longer actively supported or developed.
+There is a different version for D&D 4E System 0.5.x, 0.6.x (Foundry V12) and 0.7.x (Foundry v13) and 0.8.x (Foundry v14)
+All future development is for D&D 4E 0.8+ and other branches are considered legacy and no longer actively supported or developed.
 
 
-## If you are using the latest D&D 4E System! (0.7.3+)  
+## If you are using the latest D&D 4E System! (0.8.7+)  
 
-### (You must use Token Action HUD Core 2.0.12 or higher and Foundry V13)
+### (You must use Token Action HUD Core 2.1.0 or higher and Foundry V14)
 
 **YAY you are the latest version, it's nice an easy!**
 
@@ -27,6 +27,14 @@ All future development is for D&D 4E 0.7+ and other branches are considered lega
 
 
 # Installing for Older Versions of Foundry or D&D 4E System
+
+## If you are using D&D 4E 0.7.x -> 0.8.6 (You must be using TAH 2.0.1-2.1.0)
+
+1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
+2. Click **Install Module**
+3. In the Manifest URL field, paste: `https://github.com/draconas1/token-action-hud-dnd4e/releases/download/4.1.0/module.json`
+4. Click **Install** next to the pasted Manifest URL
+
 
 ## If you are using D&D 4E 0.6.x (You must be using TAH 2.0.1-2.0.11 - and Foundry V12 or lower)
 
