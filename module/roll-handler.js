@@ -5,7 +5,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
      * Extends Token Action HUD Core's RollHandler class and handles action events triggered when an action is clicked
      */
     RollHandler = class RollHandler extends coreModule.api.RollHandler {
-        dnd4eTAHApi = game.dnd4e.tokenBarHooks ?? dnd4e.compatibility.tah.TokenBarHooks
+        dnd4eTAHApi = game?.dnd4e?.tokenBarHooks ?? dnd4e.compatibility.tah.TokenBarHooks
 
         /**
          * Handle action click

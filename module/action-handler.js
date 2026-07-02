@@ -10,7 +10,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
      */
     ActionHandler = class ActionHandler extends coreModule.api.ActionHandler {
         dnd4eConfig = CONFIG.DND4E
-        dnd4eTAHApi = game.dnd4e.tokenBarHooks ?? dnd4e.compatibility.tah.TokenBarHooks
+        dnd4eTAHApi = game?.dnd4e?.tokenBarHooks ?? dnd4e.compatibility.tah.TokenBarHooks
         i18n = (str) => coreModule.api.Utils.i18n(str)
         version = this.dnd4eTAHApi.version
 
