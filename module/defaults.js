@@ -50,9 +50,9 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
     }
 
     // convert the dnd 4e config to a TAH group
-    const inventoryGroups = dndToGroup(game.dnd4e.config.inventoryTypes, "")
-    const featureGroups = dndToGroup(game.dnd4e.config.featureTypes, "Feature")
-    const ritualGroups = dndToGroup(game.dnd4e.config.ritualTypes, "Ritual")
+    const inventoryGroups = dndToGroup(dnd4e.CONFIG.inventoryTypes, "")
+    const featureGroups = dndToGroup(dnd4e.CONFIG.featureTypes, "Feature")
+    const ritualGroups = dndToGroup(dnd4e.CONFIG.ritualTypes, "Ritual")
 
     // Power groups are nested
     /*
@@ -64,7 +64,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
         usage: {
      */
     let powerGroupsFlattened = {}
-    Object.values(game.dnd4e.config.powerGroupings).forEach(grouping => {
+    Object.values(dnd4e.CONFIG.powerGroupings).forEach(grouping => {
         for (const [key, value] of Object.entries(grouping)) {
             powerGroupsFlattened[key] = value
         }
